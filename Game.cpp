@@ -25,23 +25,44 @@ void Game::initWindow()
 
 void Game::initFonts()
 {
-    if (this->font.loadFromFile("Fonts/ChakraPetch-Regular.ttf"))
+    if (!this->font.loadFromFile("Fonts/ChakraPetch-Bold.ttf"))
+    {
         std::cout << "ERROR::GAME::INITFONTS::Failed to load font \n";
+    }
+
+        
 }
 
 void Game::initText()
 {
     this->uiText.setFont(this->font);
     this->uiText.setCharacterSize(24);
-    this->uiText.setFillColor(sf::Color::White);
+    this->uiText.setFillColor(sf::Color::Black);
     this->uiText.setString("NULL");
+}
+
+void Game::initTexture()
+{
+    if (!this->fruitSprite.loadFromFile("assets/fruitTextures.png"))
+    {
+        std::cout << "ERROR::GAME::INITTEXTURE::Failed to load texture \n";
+    }
+    if (!this->skyTexture.loadFromFile("assets/cloud.jpg"))
+    {
+        std::cout << "ERROR::GAME::INITTEXTURE::Failed to load texture \n";
+    }
+
+    this->skybox.setPosition(0.f, 0.f);
+    this->skybox.setTexture(this->skyTexture);
 }
 
 void Game::initEnemies()
 {
     this->enemy.setPosition(0.f,0.f);
-    this->enemy.setSize(sf::Vector2f(120.f,120.f));
-    this->enemy.setFillColor(sf::Color::Cyan);
+    this->enemy.setScale(5, 5);
+    //this->enemy.setSize(sf::Vector2f(120.f,120.f));
+    this->enemy.setTexture(this->fruitSprite);
+    this->enemy.setTextureRect(sf::IntRect(0, 0, 16, 16));//setFillColor(sf::Color::Cyan);
 }
 
 Game::Game()
@@ -50,6 +71,7 @@ Game::Game()
 	this->initWindow();
     this->initFonts();
     this->initText();
+    this->initTexture();
     this->initEnemies();
 }
 
@@ -71,34 +93,11 @@ const bool Game::getEndGame() const
 void Game::spawnEnemy()
 {
 
-    int type = rand() % 5;
-
-    switch (type)
-    {
-        case 0:
-            this->enemy.setSize(sf::Vector2f(30.f, 30.f));
-            this->enemy.setFillColor(sf::Color::Magenta);
-            break;
-        case 1:
-            this->enemy.setSize(sf::Vector2f(50.f, 50.f));
-            this->enemy.setFillColor(sf::Color::Blue);
-            break;
-        case 2:
-            this->enemy.setSize(sf::Vector2f(70.f, 70.f));
-            this->enemy.setFillColor(sf::Color::Cyan);
-            break;
-        case 3:
-            this->enemy.setSize(sf::Vector2f(100.f, 100.f));
-            this->enemy.setFillColor(sf::Color::Red);
-            break;
-        case 4:
-            this->enemy.setSize(sf::Vector2f(120.f, 120.f));
-            this->enemy.setFillColor(sf::Color::Green);
-            break;
-    }
-
+    int type = rand() % 38;
+    this->enemy.setTextureRect(sf::IntRect(type * 16, 0, 16, 16));
+    
     this->enemy.setPosition(
-        static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - this->enemy.getSize().x)),
+        static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - 80)),
         0.f
     );
 
@@ -214,6 +213,11 @@ void Game::renderText(sf::RenderTarget& target)
     target.draw(this->uiText);
 }
 
+void Game::renderSkybox(sf::RenderTarget& target)
+{
+    target.draw(this->skybox);
+}
+
 void Game::renderEnemies(sf::RenderTarget& target)
 {
     for (auto& e : this->enemies)
@@ -225,6 +229,8 @@ void Game::renderEnemies(sf::RenderTarget& target)
 void Game::render()
 {
     this->window->clear();
+
+    this->renderSkybox(*this->window);
 
     this->renderEnemies(*this->window);
 

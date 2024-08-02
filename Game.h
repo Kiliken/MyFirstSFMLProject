@@ -32,6 +32,8 @@ private:
 	sf::Font font;
 
 	sf::Text uiText;
+	sf::Texture fruitSprite;
+	sf::Texture skyTexture;
 
 	//game logic
 	bool endGame;
@@ -43,14 +45,17 @@ private:
 	bool mouseHeld;
 
 	//game objects
-	std::vector < sf::RectangleShape> enemies;
-	sf::RectangleShape enemy;
+	sf::Sprite skybox;
+	std::vector < sf::Sprite> enemies;
+	sf::Sprite enemy;
+	
 
 
 	void initVariables();
 	void initWindow();
 	void initFonts();
 	void initText();
+	void initTexture();
 	void initEnemies();
 
 public:
@@ -71,6 +76,7 @@ public:
 	void update();
 
 	void renderText(sf::RenderTarget& target);
+	void renderSkybox(sf::RenderTarget& target);
 	void renderEnemies(sf::RenderTarget& target);
 	void render();
 };
