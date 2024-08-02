@@ -18,7 +18,7 @@ void Game::initWindow()
 {
 	this->videoMode.height = 600;
 	this->videoMode.width = 800; 
-	this->window = new sf::RenderWindow(this->videoMode, "First Game", sf::Style::Titlebar | sf::Style::Close);
+	this->window = new sf::RenderWindow(this->videoMode, "Falling Fruit", sf::Style::Titlebar | sf::Style::Close);
 
     this->window->setFramerateLimit(60);
 }
@@ -92,9 +92,9 @@ const bool Game::getEndGame() const
 
 void Game::spawnEnemy()
 {
-
-    int type = rand() % 38;
-    this->enemy.setTextureRect(sf::IntRect(type * 16, 0, 16, 16));
+	int typeX = rand() % 38;
+	int typeY = rand() % 6;
+	this->enemy.setTextureRect(sf::IntRect(typeX * 16, typeY * 16, 16, 16));
     
     this->enemy.setPosition(
         static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - 80)),
